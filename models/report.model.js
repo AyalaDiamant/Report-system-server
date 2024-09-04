@@ -4,11 +4,7 @@ const { ReportType, ReportRole } = require('./enums')
 
 const reportSchema = new mongoose.Schema({
     _id: Number,
-    // employee: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Employee',
-    //     required: true
-    // },
+    employeeId: Number,
     type: String, // סוג
     quantity: Number, // כמות
     rate: Number, // תעריף

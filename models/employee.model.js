@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const employeeSchema = new mongoose.Schema({
     _id: Number,
     name: String,
+    password: String, //הסיסמא תהייה התז?
     address: String,
     city: String,
     phoneNumber: String,
@@ -11,7 +12,8 @@ const employeeSchema = new mongoose.Schema({
         bankName: String,
         branchNumber: Number,
         accountNumber: String
-    }
+    },
+    isAdmin: Boolean
 }, {versionKey: false});
 
 const Employee = mongoose.model('Employee', employeeSchema);
