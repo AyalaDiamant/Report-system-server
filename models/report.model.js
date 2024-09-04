@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-import { ReportType, ReportRole } from './enums'; // ייבוא enums
+const { ReportType, ReportRole } = require('./enums')
 
 
 const reportSchema = new mongoose.Schema({
     _id: Number,
-    employee: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Employee',
-        required: true
-    },
-    type: ReportType, // סוג
+    // employee: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Employee',
+    //     required: true
+    // },
+    type: String, // סוג
     quantity: Number, // כמות
-    rate, Number, // תעריף
-    role: ReportRole, // תפקיד
+    rate: Number, // תעריף
+    role: String, // תפקיד
     project: String, // פרוייקט
     section: String, // מדור
     sign: String, // סימן/סעיף
