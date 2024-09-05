@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { ReportType, ReportRole } = require('./enums')
 
 
 const reportSchema = new mongoose.Schema({
@@ -12,7 +11,8 @@ const reportSchema = new mongoose.Schema({
     project: String, // פרוייקט
     section: String, // מדור
     sign: String, // סימן/סעיף
-    total: Number // סכום סה"כ
+    total: Number, // סכום סה"כ
+    common: String
 }, { versionKey: false });
 
 const Report = mongoose.model('Report', reportSchema);

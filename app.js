@@ -1,26 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const reportRoutes = require('./routers/report.router'); // ייבוא הראוטר
-
 require('dotenv').config();
+
+const reportRoutes = require('./routers/report.router'); 
+const loginRoutes = require('./routers/login.router'); 
+
+const db = require('./DBconnect');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const db = require('./DBconnect');
+app.use(express.json());
+app.use(cors()); 
 
-
-// Middleware
-app.use(express.json()); // תומך ב-JSON כפורמט נתונים
-app.use(cors()); // אם יש צורך לאפשר גישה ממקורות אחרים
 app.use('/api', reportRoutes);
+app.use('/api', loginRoutes);
 
-// מסלול בסיסי לבדיקה
+
 app.get('/', (req, res) => {
   res.send('Welcome to Employee Reports System!');
 });
 
-// הפעלת השרת
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

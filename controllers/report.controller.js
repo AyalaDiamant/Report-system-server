@@ -24,7 +24,8 @@ const addReport = async (req, res) => {
         project: data.project,
         section: data.section,
         sign: data.sign,
-        total: data.total
+        total: data.total,
+        common: data.common
     });
 
     try {
@@ -35,7 +36,45 @@ const addReport = async (req, res) => {
     }
 };
 
+const deleteRport = ('', async (req, res) => {
+    try {
+      const idParams = req.params.id;
+      const report = await Report.findByIdAndDelete(idParams);
+      if (!report) {
+        res.status(404).send('report not found');
+        return;
+      }
+      res.send('report deleted successfully!');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error deleting report');
+    }
+  });
+  
+  const updatedReport = ('', async (req, res) => {
+    try {
+      const idParams = req.params.id;
+      const data = req.body;
+  
+      const updatedReport = await Report.findByIdAndUpdate(
+        idParams,
+        data,
+        { new: true },
+      );
+      if (!updatedReport) {
+        res.status(404).send('repirt not found...');
+        return;
+      }
+      res.status(200).send(updatedReport);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error updating report');
+    }
+  });
+
 module.exports = {
     getReports,
-    addReport
+    addReport,
+    deleteRport,
+    updatedReport
 };

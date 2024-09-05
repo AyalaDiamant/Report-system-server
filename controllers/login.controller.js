@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const express = require('express');
-const router = express.Router();
 const employeeModel = require('../models/employee.model');
 
 let id = 0;
@@ -51,11 +50,10 @@ const login = async (req, res) => {
     }
 };
 
-
 const register = async (req, res) => {
-    // console.log(req.body);
-
     const { name, password } = req.body;
+    const allData = req.body;
+
     try {
         const existingEmployee = await employeeModel.findOne({ password });
         if (existingEmployee) {
@@ -65,27 +63,34 @@ const register = async (req, res) => {
         if (name === "Admin" && password === "Admin1Admin")// לשאול את אבא
             isAdminFromClient = true;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new userModel({
+        const newEmployee = new employeeModel({
             _id: id++,
-            name,
-            email,
+            name: allData.name,
             password: hashedPassword,
+            address: allData.address,
+            city: allData.city,
+            phoneNumber: allData.phoneNumber,
+            bankDetails: allData.bankDetails,
             isAdmin: isAdminFromClient,
         });
-        console.log(newUser, "newUser");
-        await newUser.save();
+
+        console.log(newEmployee, "newEmployee");
+        await newEmployee.save();
         const token = jwt.sign({
-            _id: newUser._id,
-            name: newUser.name,
-            email: newUser.email,
+            _id: newEmployee._id,
+            name: newEmployee.name,
+            password: newEmployee.password,
+            address: newEmployee.address,
+            city: newEmployee.city,
+            phoneNumber: newEmployee.phoneNumber,
             isAdmin: false,
         }, 'config.TOKEN_SECRET');
         res.header('auth-token', token).send({
-            token, name: newUser.name,
-            newUser,
+            token, name: newEmployee.name,
+            newEmployee,
         });
     } catch (error) {
-        console.error('Error registering user:', error);
+        console.error('Error registering employee:', error);
         res.status(500).send('Internal Server Error');
     }
 };

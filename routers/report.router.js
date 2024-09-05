@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const report = require('../controllers/report.controller'); // ייבוא הפונקציות מהקונטרולר
+const report = require('../controllers/report.controller'); 
+const { checkIsAdmin } = require('../middlewares/token.middelware');
 
-// הגדרת מסלול לקבלת כל הדוחות
-router.get('/reports', report.getReports);
 
-// הגדרת מסלול להוספת דוח חדש
-router.post('/reports', report.addReport);
+router.get('/report', report.getReports);
+router.post('/report', report.addReport);
+router.put('/report/:id', report.updatedReport);
+router.delete('/report/:id', report.deleteRport);
 
 module.exports = router;
