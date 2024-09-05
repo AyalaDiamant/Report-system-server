@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const report = require('../controllers/report.controller'); 
-const { checkIsAdmin } = require('../middlewares/token.middelware');
+// const { checkIsAdmin } = require('../middlewares/token.middelware');
 
 
 router.get('/report', report.getReports);

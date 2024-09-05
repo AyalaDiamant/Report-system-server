@@ -74,7 +74,6 @@ const register = async (req, res) => {
             isAdmin: isAdminFromClient,
         });
 
-        console.log(newEmployee, "newEmployee");
         await newEmployee.save();
         const token = jwt.sign({
             _id: newEmployee._id,
