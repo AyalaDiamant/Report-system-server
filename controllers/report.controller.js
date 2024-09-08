@@ -36,7 +36,7 @@ const addReport = async (req, res) => {
     }
 };
 
-const deleteRport = ('', async (req, res) => {
+const deleteReport = ('', async (req, res) => {
     try {
       const idParams = req.params.id;
       const report = await Report.findByIdAndDelete(idParams);
@@ -75,6 +75,6 @@ const deleteRport = ('', async (req, res) => {
 module.exports = {
     getReports,
     addReport,
-    deleteRport,
+    deleteReport,
     updatedReport
 };
