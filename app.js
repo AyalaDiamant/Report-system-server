@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const reportRoutes = require('./routers/report.router'); 
 const loginRoutes = require('./routers/login.router'); 
+const EmployeeRouter = require('./routers/employee.router'); 
 
 const db = require('./DBconnect');
 
@@ -15,6 +16,8 @@ app.use(cors());
 
 app.use('/api', reportRoutes);
 app.use('/api', loginRoutes);
+app.use('/api', EmployeeRouter);
+
 
 
 app.get('/', (req, res) => {

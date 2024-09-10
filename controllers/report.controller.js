@@ -11,6 +11,8 @@ const getReports = async (req, res) => {
 };
 
 const getReportById = async (req, res) => {
+  console.log('hiiii');
+  
   try {
     const employeeId = req.params.id;
     const reports = await Report.find({ employeeId });
