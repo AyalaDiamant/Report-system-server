@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const reportSchema = new mongoose.Schema({
     _id: Number,
-    // date: { type: Date, default: Date.now }, // הוספת שדה התאריך
     date: String,
     employeeId: Number,
     type: String, // סוג
