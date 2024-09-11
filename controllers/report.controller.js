@@ -11,8 +11,7 @@ const getReports = async (req, res) => {
 };
 
 const getReportById = async (req, res) => {
-  console.log('hiiii');
-  
+
   try {
     const employeeId = req.params.id;
     const reports = await Report.find({ employeeId });
@@ -29,9 +28,14 @@ const getReportById = async (req, res) => {
 
 const addReport = async (req, res) => {
   const data = req.body;
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  console.log(formattedDate, 'formattedDate');
 
   const newReport = new Report({
     _id: id++,
+    date: formattedDate,
     employeeId: data.employeeId,
     type: data.type,
     quantity: data.quantity,
@@ -43,6 +47,7 @@ const addReport = async (req, res) => {
     total: data.total,
     common: data.common
   });
+  console.log(newReport, 'newReport');
 
   try {
     const savedReport = await newReport.save();
