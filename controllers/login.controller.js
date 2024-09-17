@@ -30,7 +30,8 @@ const login = async (req, res) => {
             res.header('auth-token', token).send({
                 token,
                 employeeId: employee._id,
-                isAdmin: employee.isAdmin
+                isAdmin: employee.isAdmin,
+                name: employee.name
             });
         } else {
             res.status(400).send('Invalid credentials.');

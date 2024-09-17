@@ -26,11 +26,9 @@ const getReportById = async (req, res) => {
 };
 
 const addReport = async (req, res) => {
-    const data = req.body;
-    console.log(data, 'datadata');
-    
+    const data = req.body;    
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
+    const formattedDate = today.toISOString().split('T')[0];
 
     const newReport = new Report({
         _id: id++,
