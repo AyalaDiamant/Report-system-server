@@ -31,7 +31,8 @@ const login = async (req, res) => {
                 token,
                 employeeId: employee._id,
                 isAdmin: employee.isAdmin,
-                name: employee.name
+                name: employee.name,
+                employee
             });
         } else {
             res.status(400).send('Invalid credentials.');
