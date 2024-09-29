@@ -6,7 +6,6 @@ const deliverableSchema = new mongoose.Schema({
     rate: Number, // תעריף
     role: String, // תפקיד
     project: String, // פרוייקט
-    section: String, // מדור
     sign: String, // סימן/סעיף
     seif: String,
     total: Number // סכום סה"כ

@@ -117,8 +117,7 @@ exports.createEmployee = async (req, res) => {
             isAdmin,
             role,
             project,
-        });
-
+        });        
         await newEmployee.save();
 
         const token = jwt.sign({

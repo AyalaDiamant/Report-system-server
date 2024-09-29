@@ -6,7 +6,7 @@ const { verifyToken, checkIsAdmin } = require('../middelwares/token.middelware')
 router.get('/report', verifyToken,checkIsAdmin, report.getReports);
 router.get('/report/:id', verifyToken, report.getReportById);
 router.post('/report', verifyToken, report.addReport);
-router.put('/report/:id', verifyToken, checkIsAdmin, report.updatedReport);
-router.delete('/report/:id', verifyToken, checkIsAdmin, report.deleteReport);
+router.put('/report/:id', verifyToken, report.updatedReport);
+router.delete('/report/:id', verifyToken, report.deleteReport);
 
 module.exports = router;
