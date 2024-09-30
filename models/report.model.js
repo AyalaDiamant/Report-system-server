@@ -4,6 +4,7 @@ const deliverableSchema = new mongoose.Schema({
     type: String, // סוג
     quantity: Number, // כמות
     rate: Number, // תעריף
+    rateIncrease: Number, // העלאת תעריף
     role: String, // תפקיד
     project: String, // פרוייקט
     sign: String, // סימן/סעיף
