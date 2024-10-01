@@ -101,7 +101,7 @@ const employeeModel = require('../models/employee.model');
 
 let id = 0;
 
-const getEmployeesFromDatabase = async () => {
+const getEmployeesFromDatabase = async () => {    
     try {
         return await employeeModel.find();
     } catch (err) {
@@ -113,9 +113,10 @@ const getEmployeesFromDatabase = async () => {
 // פונקציה להתחברות
 const login = async (req, res) => {
     const { name, password } = req.body;
-
+    
     try {
         const employees = await getEmployeesFromDatabase();
+        
         const employee = employees.find(emp => emp.name === name);
 
         if (employee && await bcrypt.compare(password, employee.password)) {

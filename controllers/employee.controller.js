@@ -70,7 +70,7 @@ const Employee = require('../models/employee.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-let id = 40;
+let id = 1;
 
 // קבלת כל העובדים
 exports.getAllEmployees = async (req, res) => {
