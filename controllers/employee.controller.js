@@ -65,10 +65,10 @@
 //     }
 // };
 
-
 const Employee = require('../models/employee.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 let id = 1;
 
@@ -104,7 +104,7 @@ exports.createEmployee = async (req, res) => {
         if (existingEmployee) return res.status(400).send('Employee already exists.');
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const isAdmin = name === "Admin" && password === "Admin1Admin";
+        const isAdmin = name === process.env.ADMIN_NAME && password === process.env.ADMIN_PASSWORD;
 
         const newEmployee = new Employee({
             _id: id++,

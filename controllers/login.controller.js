@@ -94,7 +94,6 @@
 //     logout
 // };
 
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const employeeModel = require('../models/employee.model');

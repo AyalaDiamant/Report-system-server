@@ -21,8 +21,6 @@ app.use('/api', EmployeeRouter);
 app.use('/api', settingRoutes);
 
 
-
-
 app.get('/', (req, res) => {
   res.send('Welcome to Employee Reports System!');
 });
