@@ -96,8 +96,47 @@ exports.getEmployeeById = async (req, res) => {
 };
 
 // יצירת עובד חדש
+// exports.createEmployee = async (req, res) => {
+//     const { name, password, address, city, phoneNumber, bankDetails, role, project } = req.body;
+
+//     try {
+//         const existingEmployee = await Employee.findOne({ name });
+//         if (existingEmployee) return res.status(400).send('Employee already exists.');
+
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const isAdmin = name === process.env.ADMIN_NAME && password === process.env.ADMIN_PASSWORD;
+
+//         const newEmployee = new Employee({
+//             _id: id++,
+//             name,
+//             password: hashedPassword,
+//             address,
+//             city,
+//             phoneNumber,
+//             bankDetails,
+//             isAdmin,
+//             role,
+//             project,
+//         });        
+//         await newEmployee.save();
+
+//         const token = jwt.sign({
+//             _id: newEmployee._id,
+//             isAdmin: newEmployee.isAdmin
+//         }, 'config.TOKEN_SECRET');
+
+//         res.header('auth-token', token).send({
+//             token,
+//             newEmployee
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error creating employee', error });
+//     }
+// };
+
+
 exports.createEmployee = async (req, res) => {
-    const { name, password, address, city, phoneNumber, bankDetails, role, project } = req.body;
+    const { name, password, address, city, phoneNumber, bankDetails, roles, project } = req.body;
 
     try {
         const existingEmployee = await Employee.findOne({ name });
@@ -115,9 +154,10 @@ exports.createEmployee = async (req, res) => {
             phoneNumber,
             bankDetails,
             isAdmin,
-            role,
+            roles,
             project,
-        });        
+        });
+
         await newEmployee.save();
 
         const token = jwt.sign({
@@ -133,6 +173,7 @@ exports.createEmployee = async (req, res) => {
         res.status(500).json({ message: 'Error creating employee', error });
     }
 };
+
 
 // עדכון פרטי עובד
 exports.updateEmployee = async (req, res) => {
