@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const deliverableSchema = new mongoose.Schema({
-    type: String, // סוג
+    // type: String, // סוג
     quantity: Number, // כמות
     rate: Number, // תעריף
     rateIncrease: Number, // העלאת תעריף
