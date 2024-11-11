@@ -6,5 +6,6 @@ const fileController = require('../controllers/file.controller');
 // נתיב להעלאת קובץ
 router.post('/upload', fileController.uploadFile);
 // router.put('/update-status', fileController.updateFileStatus);
+router.get('/assigned/:userId', fileController.getAssignedFiles);
 
 module.exports = router;

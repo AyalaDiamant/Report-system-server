@@ -62,4 +62,23 @@ exports.uploadFile = (req, res) => {
       }
     });
   };
+
+  exports.getAssignedFiles = async (req, res) => {
+    const { userId } = req.params; // מקבלים את ה-ID של המשתמש מה-params של ה-URL
+  
+    try {
+      // מחפשים את כל הקבצים שבהם ה-assignedTo תואם ל-userId
+      const assignedFiles = await File.find({ assignedTo: userId });
+  
+      if (!assignedFiles || assignedFiles.length === 0) {
+        return res.status(404).json({ message: "לא נמצאו קבצים שבאחריותך" });
+      }
+  
+      // מחזירים את כל הקבצים המוקצים למשתמש
+      res.status(200).json({ documents: assignedFiles });
+    } catch (error) {
+      console.error('Error fetching assigned files:', error);
+      res.status(500).json({ message: 'שגיאה בעת הבאת הקבצים' });
+    }
+  };
   
