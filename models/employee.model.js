@@ -69,6 +69,7 @@ const employeeSchema = new mongoose.Schema({
         rateIncrease: Number
     }],
     project: String,
+    isAvailable: { type: Boolean, default: true }
 }, { versionKey: false });
 
 const Employee = mongoose.model('Employee', employeeSchema);

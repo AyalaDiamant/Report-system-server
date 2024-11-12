@@ -2,6 +2,8 @@
 const File = require('../models/file.model');
 const multer = require('multer');
 const path = require('path');
+const Employee = require('../models/employee.model'); // ייבוא המודל של העובד
+
 
 // הגדרת ספרייה להעלאת הקבצים
 const storage = multer.diskStorage({
@@ -14,27 +16,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage }).single('file');
-
-// פונקציה להעלאת קובץ
-// exports.uploadFile = (req, res) => {
-//   upload(req, res, async (err) => {
-//     if (err) {
-//       return res.status(500).json({ message: 'Error uploading file.' });
-//     }
-//     try {
-//       const newFile = new File({
-//         originalName: req.file.originalname,
-//         filePath: req.file.path,
-//         uploadedBy: req.body.userId,  // ID של מי שהעלה את הקובץ
-//         assignedTo: req.body.assignedTo // למי מוקצה התיקון (מגיהה)
-//       });
-//       await newFile.save();
-//       res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
-//     } catch (error) {
-//       res.status(500).json({ message: 'Error saving file metadata.' });
-//     }
-//   });
-// };
 
 exports.uploadFile = (req, res) => {    
     upload(req, res, async (err) => {
@@ -81,4 +62,30 @@ exports.uploadFile = (req, res) => {
       res.status(500).json({ message: 'שגיאה בעת הבאת הקבצים' });
     }
   };
+
+  exports.updateAvailable = async (req, res) => {
+      try {
+          const { employeeId } = req.params; // קבלת מזהה העובד מכתובת ה-URL
+          const { isAvailable } = req.body; // קבלת הסטטוס החדש מתוך גוף הבקשה
+  
+          // עדכון הסטטוס של העובד במסד הנתונים
+          const updatedEmployee = await Employee.findByIdAndUpdate(
+              employeeId,
+              { isAvailable: isAvailable },
+              { new: true } // מחזיר את העובד המעודכן לאחר השינוי
+          );
+  
+          if (!updatedEmployee) {
+              return res.status(404).json({ message: 'העובד לא נמצא' });
+          }
+  
+          res.status(200).json({ message: 'הסטטוס עודכן בהצלחה', employee: updatedEmployee });
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: 'שגיאה בעדכון הסטטוס' });
+      }
+  };
+  
+
+
   
