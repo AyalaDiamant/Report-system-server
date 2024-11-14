@@ -16,8 +16,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage }).single('file');
-
-// exports.uploadFile = (req, res) => {    
+// exports.uploadFile = (req, res) => { 
 //     upload(req, res, async (err) => {
 //       if (err) {
 //         return res.status(500).json({ message: 'Error uploading file.' });
@@ -43,6 +42,49 @@ const upload = multer({ storage: storage }).single('file');
 //     });
 //   };
 
+// exports.uploadFile = (req, res) => {    
+//   upload(req, res, async (err) => {
+//     if (err) {
+//       return res.status(500).json({ message: 'Error uploading file.' });
+//     }
+//     try {
+//       if (!req.file) {
+//         return res.status(400).json({ message: 'No file uploaded.' });
+//       }
+      
+//       // יצירת אובייקט מסמך חדש עם פרטים בסיסיים
+//       const newFile = new File({
+//         originalName: req.file.originalname,
+//         filePath: req.file.path,
+//         uploadedBy: req.body.uploadedBy,  // ID של מי שהעלה את הקובץ
+//         status: "מוכן לבדיקה"
+//       });
+      
+//       // שמירת המסמך
+//       await newFile.save();
+
+//       // חיפוש מבקר פנוי
+//       const availableReviewer = await Employee.findOne({ roles: { $elemMatch: { name: 'ביקורת' } }, isAvailable: true });
+      
+//       if (availableReviewer) {
+//         // עדכון המסמך עם מבקר וסטטוס חדש
+//         newFile.assignedTo = availableReviewer._id;
+//         newFile.status = "בבדיקה";
+//         await newFile.save();
+
+//         // עדכון המבקר כלא פנוי
+//         availableReviewer.isAvailable = false;
+//         await availableReviewer.save();
+//       }
+
+//       res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
+//     } catch (error) {
+//       console.error('Error saving file metadata:', error); // הדפסת השגיאה
+//       res.status(500).json({ message: 'Error saving file metadata.' });
+//     }
+//   });
+// };
+
 exports.uploadFile = (req, res) => {    
   upload(req, res, async (err) => {
     if (err) {
@@ -52,39 +94,24 @@ exports.uploadFile = (req, res) => {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded.' });
       }
-      
-      // יצירת אובייקט מסמך חדש עם פרטים בסיסיים
+
       const newFile = new File({
         originalName: req.file.originalname,
         filePath: req.file.path,
-        uploadedBy: req.body.uploadedBy,  // ID של מי שהעלה את הקובץ
+        uploadedBy: req.body.uploadedBy,
         status: "מוכן לבדיקה"
       });
-      
-      // שמירת המסמך
+
       await newFile.save();
-
-      // חיפוש מבקר פנוי
-      const availableReviewer = await Employee.findOne({ roles: { $elemMatch: { name: 'ביקורת' } }, isAvailable: true });
-      
-      if (availableReviewer) {
-        // עדכון המסמך עם מבקר וסטטוס חדש
-        newFile.assignedTo = availableReviewer._id;
-        newFile.status = "בבדיקה";
-        await newFile.save();
-
-        // עדכון המבקר כלא פנוי
-        availableReviewer.isAvailable = false;
-        await availableReviewer.save();
-      }
 
       res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
     } catch (error) {
-      console.error('Error saving file metadata:', error); // הדפסת השגיאה
+      console.error('Error saving file metadata:', error);
       res.status(500).json({ message: 'Error saving file metadata.' });
     }
   });
 };
+
 
   exports.getAssignedFiles = async (req, res) => {
     const { userId } = req.params; // מקבלים את ה-ID של המשתמש מה-params של ה-URL
