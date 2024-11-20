@@ -44,7 +44,48 @@ const upload = multer({ storage: storage }).single('file');
 // };
 
 // file.controller.js
+// ------------------
+// exports.uploadFile = (req, res) => {
+//   upload(req, res, async (err) => {
+//     if (err) {
+//       return res.status(500).json({ message: 'Error uploading file.' });
+//     }
+//     try {
+//       if (!req.file) {
+//         return res.status(400).json({ message: 'No file uploaded.' });
+//       }
 
+//       const newFile = new File({
+//         originalName: req.file.originalname,
+//         filePath: req.file.path,
+//         uploadedBy: req.body.uploadedBy,
+//         status: "מוכן לבדיקה"
+//       });
+
+//       // חיפוש אם יש מבקר פנוי
+//       const availableReviewer = await Employee.findOne({
+//         isAvailable: true,
+//         "roles.name": "ביקורת" // חפש תפקיד בשם "ביקורת" בתוך המערך roles
+//       });
+//       if (availableReviewer) {
+//         newFile.assignedTo = availableReviewer._id;
+//         newFile.status = 'בבדיקה';
+//         availableReviewer.isAvailable = false;
+//         await availableReviewer.save();
+//       } else {
+//         // אם אין מבקר פנוי, המסמך נכנס לתור הממתינים
+//         newFile.isInQueue = true;
+//         newFile.status = 'בתור ממתינים';
+//       }
+
+//       await newFile.save();
+//       res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
+//     } catch (error) {
+//       console.error('Error saving file metadata:', error);
+//       res.status(500).json({ message: 'Error saving file metadata.' });
+//     }
+//   });
+// };
 exports.uploadFile = (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
@@ -55,31 +96,48 @@ exports.uploadFile = (req, res) => {
         return res.status(400).json({ message: 'No file uploaded.' });
       }
 
-      const newFile = new File({
-        originalName: req.file.originalname,
-        filePath: req.file.path,
-        uploadedBy: req.body.uploadedBy,
-        status: "מוכן לבדיקה"
-      });
-
-      // חיפוש אם יש מבקר פנוי
-      const availableReviewer = await Employee.findOne({
-        isAvailable: true,
-        "roles.name": "ביקורת" // חפש תפקיד בשם "ביקורת" בתוך המערך roles
-      });
-      if (availableReviewer) {
-        newFile.assignedTo = availableReviewer._id;
-        newFile.status = 'בבדיקה';
-        availableReviewer.isAvailable = false;
-        await availableReviewer.save();
+      // חיפוש אם יש מסמך בשם זהה
+      const existingFile = await File.findOne({ originalName: req.file.originalname });
+      if (existingFile) {
+        // אם יש מסמך קיים, נבדוק מי העלה אותו
+        if (existingFile.uploadedBy !== req.body.uploadedBy) {
+          // אם המעלה הקודם לא היה אותו אדם, נעדכן את המידע במסד נתונים
+          existingFile.uploadedBy = req.body.uploadedBy; // עדכון המעלה של המסמך
+          existingFile.assignedTo = req.body.uploadedBy; // במקרה הזה, נעדכן גם את המוקצה (למבקר)
+          await existingFile.save();
+          res.status(200).json({ message: 'המסמך הוקצה בהצלחה למבקר', file: existingFile });
+        } else {
+          res.status(200).json({ message: 'המסמך כבר הועלה על ידי אותו עובד', file: existingFile });
+        }
       } else {
-        // אם אין מבקר פנוי, המסמך נכנס לתור הממתינים
-        newFile.isInQueue = true;
-        newFile.status = 'בתור ממתינים';
-      }
+        // אם המסמך לא קיים, ניצור אותו חדש
+        const newFile = new File({
+          originalName: req.file.originalname,
+          filePath: req.file.path,
+          uploadedBy: req.body.uploadedBy,
+          status: "מוכן לבדיקה"
+        });
 
-      await newFile.save();
-      res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
+        // חיפוש אם יש מבקר פנוי
+        const availableReviewer = await Employee.findOne({
+          isAvailable: true,
+          "roles.name": "ביקורת" // חפש תפקיד בשם "ביקורת" בתוך המערך roles
+        });
+
+        if (availableReviewer) {
+          newFile.assignedTo = availableReviewer._id;
+          newFile.status = 'בבדיקה';
+          availableReviewer.isAvailable = false;
+          await availableReviewer.save();
+        } else {
+          // אם אין מבקר פנוי, המסמך נכנס לתור הממתינים
+          newFile.isInQueue = true;
+          newFile.status = 'בתור ממתינים';
+        }
+
+        await newFile.save();
+        res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
+      }
     } catch (error) {
       console.error('Error saving file metadata:', error);
       res.status(500).json({ message: 'Error saving file metadata.' });
@@ -108,7 +166,6 @@ exports.assignFilesFromQueue = async () => {
     }
   }
 };
-
 
   exports.getAssignedFiles = async (req, res) => {
     const { userId } = req.params; // מקבלים את ה-ID של המשתמש מה-params של ה-URL
@@ -149,6 +206,16 @@ exports.assignFilesFromQueue = async () => {
           res.status(500).json({ message: 'שגיאה בעדכון הסטטוס' });
       }
   };
+
+  exports.getAllDocuments = async (req, res) => {
+    try {
+        const documents = await File.find(); // מחזיר את כל המסמכים מהDB
+        res.status(200).json(documents); // החזרת רשימת המסמכים בתגובה
+    } catch (error) {
+        console.error('Error fetching documents:', error);
+        res.status(500).json({ message: 'שגיאה בעת הבאת המסמכים' });
+    }
+};
 
 
   // exports.uploadFile = (req, res) => { 

@@ -8,6 +8,8 @@ router.post('/upload', fileController.uploadFile);
 // router.put('/update-status', fileController.updateFileStatus);
 router.get('/assigned/:userId', fileController.getAssignedFiles);
 router.put('/:employeeId/available', fileController.updateAvailable);
+router.get('/all-documents', fileController.getAllDocuments);
+
 // router.get('/waiting', fileController.getWaitingDocuments);
 
 module.exports = router;

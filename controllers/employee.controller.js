@@ -58,13 +58,16 @@ exports.createEmployee = async (req, res) => {
 
         const token = jwt.sign({
             _id: newEmployee._id,
-            isAdmin: newEmployee.isAdmin
+            isAdmin: newEmployee.isAdmin,
         }, 'config.TOKEN_SECRET');
 
+        console.log(newEmployee);
+        
         res.header('auth-token', token).send({
             token,
             newEmployee
         });
+        // return newEmployee;
     } catch (error) {
         res.status(500).json({ message: 'Error creating employee', error });
     }
