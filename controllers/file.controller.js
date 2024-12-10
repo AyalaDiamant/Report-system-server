@@ -15,27 +15,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single('file');
 
-// פונקציה להעלאת קובץ
-// exports.uploadFile = (req, res) => {
-//   upload(req, res, async (err) => {
-//     if (err) {
-//       return res.status(500).json({ message: 'Error uploading file.' });
-//     }
-//     try {
-//       const newFile = new File({
-//         originalName: req.file.originalname,
-//         filePath: req.file.path,
-//         uploadedBy: req.body.userId,  // ID של מי שהעלה את הקובץ
-//         assignedTo: req.body.assignedTo // למי מוקצה התיקון (מגיהה)
-//       });
-//       await newFile.save();
-//       res.status(200).json({ message: 'File uploaded successfully.', file: newFile });
-//     } catch (error) {
-//       res.status(500).json({ message: 'Error saving file metadata.' });
-//     }
-//   });
-// };
-
 exports.uploadFile = (req, res) => {    
     upload(req, res, async (err) => {
       if (err) {
