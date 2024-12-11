@@ -1,5 +1,5 @@
 const Report = require('../models/report.model');
-let id = 0;
+let id = 20;
 
 const getReports = async (req, res) => {
     try {

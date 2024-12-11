@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const employeeModel = require('../models/employee.model');
 
-let id = 0;
+let id = 20;
 
 const getEmployeesFromDatabase = async () => {    
     try {
